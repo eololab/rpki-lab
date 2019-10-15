@@ -1,0 +1,15 @@
+[Unit]
+Description=Zebra daemon
+After=network.target
+
+[Service]
+Type=forking
+Environment=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+ExecStartPre=/sbin/ldconfig
+ExecStart=/usr/lib/frr/zebra --daemon --vty_addr 127.0.0.1 --retain --keep_kernel --pid_file /tmp/zebra.pid --config_file /etc/frr/zebra.conf --nl-bufsize 8388608
+ExecStop=/usr/bin/killall -TERM zebra
+Restart=on-failure
+TimeoutSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Bgpd daemon
+After=network.target zebra.service
+
+[Service]
+Type=forking
+Environment=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+ExecStartPre=/sbin/ldconfig
+ExecStart=/usr/lib/frr/bgpd --daemon -A 127.0.0.1 -M rpki --pid_file /tmp/bgpd.pid --config_file /etc/frr/bgpd.conf
+ExecStop=/usr/bin/killall -TERM bgpd
+Restart=always
+TimeoutSec=5
+
+[Install]
+WantedBy=multi-user.target
